@@ -3,6 +3,7 @@ package com.vsoluciones.service.impl;
 import com.vsoluciones.repo.IGenericRepo;
 import com.vsoluciones.service.ICRUD;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -27,6 +28,11 @@ public abstract class CRUDImpl<T, D> implements ICRUD<T, D> {
   @Override
   public Flux<T> findAll() {
     return getRepo().findAll();
+  }
+
+  @Override
+  public Flux<T> findAllWithPage(Pageable pageable) {
+    return getRepo().findAllBy(pageable);
   }
 
   @Override

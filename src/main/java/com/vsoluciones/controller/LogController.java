@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -38,6 +39,23 @@ public class LogController {
             .contentType(MediaType.APPLICATION_JSON)
             .body(fx))
         .defaultIfEmpty(ResponseEntity.notFound().build());
+  }
+
+
+  @CrossOrigin(origins = "http://localhost:4200")
+  @PreAuthorize("hasAuthority('SUPPORT')")
+  @GetMapping("/paged")
+  public Mono<ResponseEntity<Flux<LogDTO>>> findAllWithPague(
+          @RequestParam(value = "page", defaultValue = "0") int page,
+          @RequestParam(value = "size", defaultValue = "10") int size) {
+
+    Flux<LogDTO> fx = service.findAllWithPage(PageRequest.of(page, size))
+            .map(this::convertToDto);
+
+    return Mono.just(ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(fx))
+            .defaultIfEmpty(ResponseEntity.notFound().build());
   }
 
   @GetMapping("/{id}")
