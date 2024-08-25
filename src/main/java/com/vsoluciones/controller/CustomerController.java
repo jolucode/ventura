@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -29,7 +28,6 @@ public class CustomerController {
   private final ModelMapper mapper;
 
   @CrossOrigin(origins = "http://localhost:4200")
-  @PreAuthorize("hasAuthority('FINANCE')")
   @GetMapping
   public Mono<ResponseEntity<Flux<CustomerDTO>>> findAll() {
     Flux<CustomerDTO> fx = service.findAll()
@@ -89,7 +87,6 @@ public class CustomerController {
   }
 
   @CrossOrigin(origins = "http://localhost:4200")
-  @PreAuthorize("hasAuthority('FINANCE')")
   @PatchMapping("/{id}")
   public Mono<ResponseEntity<Object>> updateCustomer(@PathVariable("id") String id) {
     return service.findById(id)

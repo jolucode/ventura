@@ -3,6 +3,7 @@
 #    mongodb:
 #      uri: mongodb://localhost:27017/ventura2024
 #MONGO ATLAS
+
 spring:
   data:
     mongodb:

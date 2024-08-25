@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -27,7 +26,6 @@ public class DishController {
   @Qualifier("defaultMapper")
   private final ModelMapper mapper;
 
-  @PreAuthorize("hasAuthority('ADMIN')")
   @GetMapping
   public Mono<ResponseEntity<Flux<DishDTO>>> findAll() {
     Flux<DishDTO> fx = service.findAll()
