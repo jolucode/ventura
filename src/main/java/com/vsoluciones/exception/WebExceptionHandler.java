@@ -1,5 +1,6 @@
 package com.vsoluciones.exception;
 
+import com.vsoluciones.securrity.CustomJwtException;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
@@ -41,6 +42,15 @@ public class WebExceptionHandler extends AbstractErrorWebExceptionHandler {
     HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
     String statusCode = String.valueOf(generalError.get("status"));
     Throwable error = getError(req);
+
+    if (error instanceof CustomJwtException) {
+      status = HttpStatus.UNAUTHORIZED;
+      customError.put("message", error.getMessage());
+      customError.put("status", status.value());
+    } else {
+      customError.put("message", "An unexpected error occurred");
+      customError.put("status", status.value());
+    }
 
     switch (statusCode) {
       case "400" -> {

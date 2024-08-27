@@ -9,8 +9,8 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.vsoluciones</groupId>
-    <artifactId>soluciones</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>microservice-portal</artifactId>
+    <version>2024.0.1</version>
     <name>soluciones</name>
     <description>Demo project for Spring Boot</description>
     <properties>

@@ -8,7 +8,7 @@ spring:
     mongodb:
       uri: mongodb+srv://lbecerra:Lima40401010@cluster0.g1jnjjj.mongodb.net/ventura2024
 server:
-  port: 8111
+  port: 8083
 
 jjwt:
   secret: 4u7x!A%D*G-KaNdRgUkXp2s5v8y/B?E(H+MbQeShVmYq3t6w9z$C&F)J@NcRfUjW

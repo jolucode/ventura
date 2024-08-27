@@ -6,6 +6,8 @@ import com.vsoluciones.service.ICustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,8 @@ import java.net.URI;
 @CrossOrigin(origins = "http://localhost:4200")
 public class CustomerController {
 
+    Logger logger = LoggerFactory.getLogger(CustomerController.class);
+
   private final ICustomerService service;
 
   @Qualifier("defaultMapper")
@@ -32,23 +36,58 @@ public class CustomerController {
   @PreAuthorize("hasAuthority('FINANCE')")
   @GetMapping
   public Mono<ResponseEntity<Flux<CustomerDTO>>> findAll() {
-    Flux<CustomerDTO> fx = service.findAll()
-        .map(this::convertToDto);
-    return Mono.just(ResponseEntity.ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(fx))
-        .defaultIfEmpty(ResponseEntity.notFound().build());
+      // Capturar el tiempo de inicio
+      long startTime = System.currentTimeMillis();
+
+      // Loguear información sobre la petición recibida
+      logger.info("Endpoint '/findAll' invocado \n");
+
+      Flux<CustomerDTO> fx = service.findAll()
+              .map(this::convertToDto);
+
+      return Mono.just(ResponseEntity.ok()
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .body(fx))
+              .doOnSuccess(response -> {
+                  // Calcular el tiempo de procesamiento
+                  long duration = System.currentTimeMillis() - startTime;
+                  logger.info("Respuesta enviada con status: {}. Tiempo de procesamiento: {} ms \n", response.getStatusCode(), duration);
+              })
+              .doOnError(error -> {
+                  // Calcular el tiempo de procesamiento en caso de error
+                  long duration = System.currentTimeMillis() - startTime;
+                  logger.error("Error al procesar la solicitud después de {} ms: \n", duration, error);
+              })
+              .defaultIfEmpty(ResponseEntity.notFound().build());
   }
 
-  @GetMapping("/{id}")
-  public Mono<ResponseEntity<CustomerDTO>> findById(@PathVariable("id") String id) {
-    return service.findById(id)
-        .map(this::convertToDto)
-        .map(x -> ResponseEntity.ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(x))
-        .defaultIfEmpty(ResponseEntity.notFound().build());
-  }
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PreAuthorize("hasAuthority('FINANCE')")
+    @GetMapping("/{id}")
+    public Mono<ResponseEntity<CustomerDTO>> findById(@PathVariable("id") String id) {
+        // Capturar el tiempo de inicio
+        long startTime = System.currentTimeMillis();
+
+        // Loguear información sobre la petición recibida
+        logger.info("Endpoint '/findById' invocado con id: {} \n", id);
+
+        return service.findById(id)
+                .map(this::convertToDto)
+                .map(x -> ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(x))
+                .doOnSuccess(response -> {
+                    // Calcular el tiempo de procesamiento
+                    long duration = System.currentTimeMillis() - startTime;
+                    logger.info("Respuesta enviada con status: {}. Tiempo de procesamiento: {} ms \n", response.getStatusCode(), duration);
+                })
+                .doOnError(error -> {
+                    // Calcular el tiempo de procesamiento en caso de error
+                    long duration = System.currentTimeMillis() - startTime;
+                    logger.error("Error al procesar la solicitud después de {} ms: \n", duration, error);
+                })
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
 
   @PostMapping
   public Mono<ResponseEntity<CustomerDTO>> save(@Valid @RequestBody CustomerDTO dto, final ServerHttpRequest req) {

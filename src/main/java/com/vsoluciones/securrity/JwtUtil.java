@@ -1,8 +1,9 @@
 package com.vsoluciones.securrity;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,8 @@ import java.util.Map;
 //Clase S4
 @Component
 public class JwtUtil implements Serializable {
+
+  Logger logger = LoggerFactory.getLogger(JwtUtil.class);
 
   @Value("${jjwt.secret}") //EL Expression Language
   private String secret;
@@ -51,13 +54,22 @@ public class JwtUtil implements Serializable {
 
   ////////////////////////////////////////////////////////
   public Claims getAllClaimsFromToken(String token) {
-    SecretKey key = Keys.hmacShaKeyFor(this.secret.getBytes());
-
-    return Jwts.parser()
-        .setSigningKey(key)
-        .build()
-        .parseClaimsJws(token)
-        .getBody();
+    try {
+      SecretKey key = Keys.hmacShaKeyFor(this.secret.getBytes());
+      return Jwts.parser()
+              .setSigningKey(key)
+              .build()
+              .parseClaimsJws(token)
+              .getBody();
+    } catch (ExpiredJwtException e) {
+      // Registra el error específico de token expirado
+      logger.error("Token expired: " + e.getMessage());
+      throw new CustomJwtException("Token has expired", e);
+    } catch (UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e) {
+      // Registra otros errores relacionados con JWT
+      logger.error("JWT Error: " + e.getMessage());
+      throw new CustomJwtException("Genera token");
+    }
   }
 
   public String getUsernameFromToken(String token) {
