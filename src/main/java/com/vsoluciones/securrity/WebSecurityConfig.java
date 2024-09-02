@@ -17,33 +17,35 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-  private final AuthenticationManager authenticationManager;
-  private final SecurityContextRepository securityContextRepository;
+    private final AuthenticationManager authenticationManager;
+    private final SecurityContextRepository securityContextRepository;
 
-  @Bean
-  public BCryptPasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-  @Bean
-  public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-    //Desde Spring Boot 3.1
-    return http
-        .exceptionHandling(Customizer.withDefaults())
-        .csrf(ServerHttpSecurity.CsrfSpec::disable)
-        .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
-        .httpBasic(Customizer.withDefaults())
-        .authenticationManager(authenticationManager)
-        .securityContextRepository(securityContextRepository)
-        .authorizeExchange(req -> {
-          req.pathMatchers("/login").permitAll();
-          req.pathMatchers("/customers/**").permitAll();
-          req.pathMatchers("/logs/**").permitAll();
-          req.pathMatchers("/v2/login").permitAll();
-          //req.pathMatchers("/v2/**").authenticated()
-          req.anyExchange().authenticated();
-        })
-        .build();
-  }
+    @Bean
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        //Desde Spring Boot 3.1
+        return http
+                .exceptionHandling(Customizer.withDefaults())
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
+                .httpBasic(Customizer.withDefaults())
+                .authenticationManager(authenticationManager)
+                .securityContextRepository(securityContextRepository)
+                .authorizeExchange(req -> {
+                    req.pathMatchers("/login").permitAll();
+                    req.pathMatchers("/customers/**").permitAll();
+                    req.pathMatchers("/logs/**").permitAll();
+                    req.pathMatchers("/api/facturas/**").permitAll();
+
+                    req.pathMatchers("/v2/login").permitAll();
+                    //req.pathMatchers("/v2/**").authenticated()
+                    req.anyExchange().authenticated();
+                })
+                .build();
+    }
 
 }
