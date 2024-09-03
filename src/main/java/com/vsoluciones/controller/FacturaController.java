@@ -16,9 +16,7 @@ public class FacturaController {
     private FacturaService facturaService;
 
     @PostMapping
-    public String procesarFactura(@RequestBody Factura factura) {
-        // Llamar al servicio para procesar la factura
-        facturaService.procesarFactura(factura);
-        return "Factura procesada con éxito";
+    public StringBuilder procesarFactura(@RequestBody Factura factura) {
+        return facturaService.procesarFactura(factura);
     }
 }
