@@ -1,9 +1,9 @@
-package com.vsoluciones.service.impl;
+package com.vsoluciones.service;
 
-import com.vsoluciones.cursofe.UtilMoneda;
-import com.vsoluciones.cursofe.model.Cuota;
-import com.vsoluciones.cursofe.model.Factura;
-import com.vsoluciones.cursofe.model.Item;
+import com.vsoluciones.utils.UtilMoneda;
+import com.vsoluciones.model.Cuota;
+import com.vsoluciones.model.Factura;
+import com.vsoluciones.model.Item;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;

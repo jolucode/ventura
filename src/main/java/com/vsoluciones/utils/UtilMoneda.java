@@ -1,4 +1,4 @@
-package com.vsoluciones.cursofe;
+package com.vsoluciones.utils;
 
 import java.util.HashMap;
 import java.util.Map;

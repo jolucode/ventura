@@ -1,4 +1,4 @@
-package com.vsoluciones.cursofe.model;
+package com.vsoluciones.model;
 
 import lombok.Data;
 
