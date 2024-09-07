@@ -1,0 +1,57 @@
+{
+  "empresa": {
+    "ruc": "20604051984",
+    "razon_social": "FACTURACION ELECTRONICA MONSTRUO E.I.R.L.",
+    "nombre_comercial": "FACTURACION INTEGRAL",
+    "domicilio_fiscal": "AV. LA MOLINA NRO. 570", //direccion del emisor
+    "ubigeo": "150114", //codigo que tiene el distrito
+    "urbanizacion": "RESIDENCIAL MONTERRICO",
+    "distrito": "LA MOLINA",
+    "provincia": "LIMA",
+    "departamento": "LIMA",
+    "modo": "0", //modo 0 = BETA, modo 1 = PRODUCCION
+    "usu_secundario_produccion_user": "MODDATOS", //
+    "usu_secundario_produccion_password": "MODDATOS"
+  },
+  "cliente": {
+    "razon_social_nombres": "Hector De La Cruz", //numero cliente que va a comprar
+    "numero_documento": "47753898", //DNI = 1,EXTRANJERO = 4, PASAPORTE = 7, RUC = 6 (RVISAR CATALOGO 6)
+    "codigo_tipo_entidad": "1",
+    "cliente_direccion": "Av. Morales Duarez 168"
+  },
+  "venta": { //DATOS DE LA VENTA
+    "serie": "BF03", //son 4 cataracteres si o si, letras o numeros - NC anulafactura inicia con F, anula Boleta inicia con B
+    "numero": "53953",
+    "fecha_emision": "2023-01-26",
+    "hora_emision": "10:02:49",
+    "fecha_vencimiento": "",
+    "moneda_id": "2", //1 = soles, 2 = dolares
+    "forma_pago_id": "1", //1 = contado, 2 = credito
+    "total_gravada": "500", // totalbase sin IGV
+    "total_igv": "90", //totalbase*0.18
+    "total_exonerada": "", //para selva
+    "total_inafecta": "", //por ejemplo nos contrata un colegio
+    "tipo_documento_codigo": "03", //factura 01, boleta 03, credito 07, debito 08
+    "nota": "notas o comentarios"
+  },
+  "items": [
+    {
+      "producto": "ALARMA PREMIUM 360 /AUTO C/ACC. 2 LLAV P/TY",
+      "cantidad": "1",
+      "precio_base": "100",
+      "codigo_sunat": "-",
+      "codigo_producto": "cc1", //codigo propio que se le pone a mi producto
+      "codigo_unidad": "ZZ", //codigo unidad medida internacional - Revisar MANUAL PROGRAMADOR pagina 58
+      "tipo_igv_codigo": "10" // selva 20, colegio 30, IGV graada 10
+    },
+    {
+      "producto": "CLAXON DE TRES CORNETAS PLASTICO ROJO 12V(600/765)",
+      "cantidad": "2",
+      "precio_base": "200",
+      "codigo_sunat": "46171606",
+      "codigo_producto": "H-003001981 22-10",
+      "codigo_unidad": "NIU",
+      "tipo_igv_codigo": "10"
+    }
+  ]
+}
