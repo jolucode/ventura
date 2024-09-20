@@ -47,7 +47,8 @@ public class SecurityContextRepository implements ServerSecurityContextRepositor
                     throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not authorized");
                 }
             } else {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not authorized");
+                return Mono.error(new CustomJwtException("Token not valid or expired"));
+                //throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not authorized");
             }
 
         } catch (ResponseStatusException e) {

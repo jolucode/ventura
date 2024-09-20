@@ -39,6 +39,7 @@ public class WebSecurityConfig {
           req.pathMatchers("/login").permitAll();
           req.pathMatchers("/customers/**").permitAll();
           req.pathMatchers("/logs/**").permitAll();
+            req.pathMatchers("/api/document/**").permitAll();
           req.pathMatchers("/v2/login").permitAll();
           //req.pathMatchers("/v2/**").authenticated()
           req.anyExchange().authenticated();

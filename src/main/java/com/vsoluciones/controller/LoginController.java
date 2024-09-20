@@ -35,7 +35,7 @@ public class LoginController {
             return ResponseEntity.ok(new AuthResponse(token, expiration));
           } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new ErrorLogin("Bad Credentials", new Date()));
+                .body(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
           }
         })
         .defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
