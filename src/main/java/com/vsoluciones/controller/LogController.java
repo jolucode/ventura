@@ -17,6 +17,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.net.URI;
 
@@ -63,6 +65,38 @@ public class LogController {
         logger.info("Endpoint '/paged' invocado con los siguientes parámetros: page = {}, size = {}", page, size);
 
         Flux<LogDTO> fx = service.findAllWithPage(PageRequest.of(page, size))
+                .map(this::convertToDto);
+
+        return Mono.just(ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(fx))
+                .doOnSuccess(response -> {
+                    // Calcular el tiempo de procesamiento
+                    long duration = System.currentTimeMillis() - startTime;
+                    logger.info("Respuesta enviada con status: {}. Tiempo de procesamiento: {} ms", response.getStatusCode(), duration);
+                })
+                .doOnError(error -> {
+                    // Calcular el tiempo de procesamiento en caso de error
+                    long duration = System.currentTimeMillis() - startTime;
+                    logger.error("Error al procesar la solicitud después de {} ms: ", duration, error);
+                })
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+    @PreAuthorize("hasAuthority('SUPPORT')")
+    @GetMapping("/pagedByFilter")
+    public Mono<ResponseEntity<Flux<LogDTO>>> findbyFilter(
+            @RequestParam(value = "filter", defaultValue = "") String filter,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+
+        // Capturar el tiempo de inicio
+        long startTime = System.currentTimeMillis();
+
+        // Loguear información sobre la petición recibida
+        logger.info("Endpoint '/paged' invocado con los siguientes parámetros: page = {}, size = {}", page, size);
+
+        Flux<LogDTO> fx = service.findByFilter(filter,PageRequest.of(page, size))
                 .map(this::convertToDto);
 
         return Mono.just(ResponseEntity.ok()
@@ -136,6 +170,29 @@ public class LogController {
                 .doOnSuccess(response -> logger.info("Respuesta enviada con status: {}", response.getStatusCode()))
                 .doOnError(error -> logger.error("Error al procesar la solicitud: ", error))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+    //@CrossOrigin(origins = "http://localhost:4200")
+    @PreAuthorize("hasAuthority('SUPPORT')")
+    @GetMapping("/countAll")
+    public Mono<ResponseEntity<?>> countAll() {
+        return service.countAll()
+                .map(x -> {
+                    return x;
+                })
+                .flatMap(x -> {
+                    if (x.equals(0L)) {
+                        return Mono.just(ResponseEntity.noContent().build());
+                    }
+                    else{
+                        Map<String, Object> responseBody = new HashMap<>();
+                        responseBody.put("count", x);
+                        return Mono.just(ResponseEntity.ok(responseBody));
+                    }
+                })
+                .doOnSuccess(response -> logger.info("Respuesta enviada con status: {}", response.getStatusCode()))
+                .doOnError(error -> logger.error("Error al procesar la solicitud: ", error))
+                .defaultIfEmpty(ResponseEntity.notFound().build());  // Si el Mono está vacío, devolver 404
     }
 
     private LogDTO convertToDto(Log model) {

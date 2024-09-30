@@ -30,14 +30,23 @@ public abstract class CRUDImpl<T, D> implements ICRUD<T, D> {
     return getRepo().findAll();
   }
 
+  public Mono<Long> countAll() {
+    return getRepo().count();
+  }
+
   @Override
   public Flux<T> findAllWithPage(Pageable pageable) {
     return getRepo().findAllBy(pageable);
   }
 
+
   @Override
   public Mono<T> findById(D id) {
     return getRepo().findById(id);
+  }
+
+  public Flux<T> findByFilter(String filter, Pageable pageable) {
+    return getRepo().findByFilter(filter,pageable);
   }
 
   @Override

@@ -14,9 +14,14 @@ public interface ICRUD<T, ID> {
 
   Flux<T> findAllWithPage(Pageable pageable);
 
+  Flux<T> findByFilter(String filter,Pageable pageable);
+
+
   Mono<T> findById(ID id);
 
   Mono<Boolean> delete(ID id);
+
+  Mono<Long> countAll();
 
 
 }
