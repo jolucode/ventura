@@ -34,6 +34,11 @@ public abstract class CRUDImpl<T, D> implements ICRUD<T, D> {
     return getRepo().count();
   }
 
+  public Mono<Long> countFilter(String filter) {
+    String newFilter= "\"" + filter + "\"";
+    return getRepo().findByFilterWOPagination(newFilter).count();
+  }
+
   @Override
   public Flux<T> findAllWithPage(Pageable pageable) {
     return getRepo().findAllBy(pageable);
@@ -46,7 +51,8 @@ public abstract class CRUDImpl<T, D> implements ICRUD<T, D> {
   }
 
   public Flux<T> findByFilter(String filter, Pageable pageable) {
-    return getRepo().findByFilter(filter,pageable);
+    String newFilter= "\"" + filter + "\"";
+    return getRepo().findByFilter(newFilter,pageable);
   }
 
   @Override

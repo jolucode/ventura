@@ -195,6 +195,29 @@ public class LogController {
                 .defaultIfEmpty(ResponseEntity.notFound().build());  // Si el Mono está vacío, devolver 404
     }
 
+    //@CrossOrigin(origins = "http://localhost:4200")
+    @PreAuthorize("hasAuthority('SUPPORT')")
+    @GetMapping("/countFilter")
+    public Mono<ResponseEntity<?>> countFilter( @RequestParam(value = "filter", defaultValue = "") String filter) {
+        return service.countFilter(filter)
+                .map(x -> {
+                    return x;
+                })
+                .flatMap(x -> {
+                    if (x.equals(0L)) {
+                        return Mono.just(ResponseEntity.noContent().build());
+                    }
+                    else{
+                        Map<String, Object> responseBody = new HashMap<>();
+                        responseBody.put("count", x);
+                        return Mono.just(ResponseEntity.ok(responseBody));
+                    }
+                })
+                .doOnSuccess(response -> logger.info("Respuesta enviada con status: {}", response.getStatusCode()))
+                .doOnError(error -> logger.error("Error al procesar la solicitud: ", error))
+                .defaultIfEmpty(ResponseEntity.notFound().build());  // Si el Mono está vacío, devolver 404
+    }
+
     private LogDTO convertToDto(Log model) {
         return mapper.map(model, LogDTO.class);
     }

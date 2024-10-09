@@ -22,6 +22,8 @@ public interface ICRUD<T, ID> {
   Mono<Boolean> delete(ID id);
 
   Mono<Long> countAll();
+  Mono<Long> countFilter(String filter);
+
 
 
 }
