@@ -109,3 +109,6 @@ DESPLIEUGE ANGULAR
 https://www.youtube.com/watch?v=D2oOWgCuBIY
 
 DESPLIEUGE BACK
+
+Añadir Index en Mongo, para bd de logs
+{ "$**": "text" }
